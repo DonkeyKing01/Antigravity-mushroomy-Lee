@@ -380,15 +380,30 @@ const FungalMap: React.FC<FungalMapProps> = ({
 
     return (
         <div className="relative w-full h-full overflow-hidden bg-background/20" ref={containerRef}>
-            {/* Background World Map Image */}
-            <div
-                className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay"
-                style={{
-                    backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
-            />
+            {/* Background World Map & Grid */}
+            <div className="absolute inset-0 pointer-events-none select-none">
+                {/* Digital Grid Overlay */}
+                <div
+                    className="absolute inset-0 opacity-20"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, #334155 1px, transparent 1px),
+                                        linear-gradient(to bottom, #334155 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px',
+                        maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+                    }}
+                />
+
+                {/* World Map with Glow Effect */}
+                <div
+                    className="absolute inset-0 opacity-40 mix-blend-screen"
+                    style={{
+                        backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        filter: 'invert(1) sepia(1) saturate(3) hue-rotate(100deg) brightness(0.7) drop-shadow(0 0 2px rgba(45, 212, 191, 0.5))'
+                    }}
+                />
+            </div>
 
             <canvas
                 ref={canvasRef}

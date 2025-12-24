@@ -94,20 +94,44 @@ const MapPage = () => {
   const [nourishPulses, setNourishPulses] = useState<Pulse[]>([]);
   const [replyMode, setReplyMode] = useState(false);
 
-  // Initial Data Generation (Copied from FungalMap)
+  // Initial Data Generation
   useEffect(() => {
-    const initialNodes: Node[] = Array.from({ length: 80 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 90 + 5,
-      y: Math.random() * 80 + 10,
-      type: Math.random() > 0.8 ? 'colony' : 'spore',
-      size: Math.random() * 4 + 3,
-      nourishment: Math.floor(Math.random() * 10),
-      author: `Observer_${Math.floor(Math.random() * 1000)}`,
-      species: ['Amanita', 'Mycena', 'Cantharellus', 'Russula'][Math.floor(Math.random() * 4)],
-      pulseOffset: Math.random() * Math.PI * 2,
-      location: { lat: 34 + Math.random(), lng: -118 + Math.random() }
-    }));
+    const CONTINENT_ZONES = [
+      { name: 'North America', xMin: 10, xMax: 30, yMin: 15, yMax: 40 },
+      { name: 'South America', xMin: 22, xMax: 32, yMin: 45, yMax: 75 },
+      { name: 'Europe', xMin: 46, xMax: 56, yMin: 15, yMax: 30 },
+      { name: 'Africa', xMin: 46, xMax: 60, yMin: 35, yMax: 65 },
+      { name: 'Asia', xMin: 60, xMax: 90, yMin: 15, yMax: 45 },
+      { name: 'Australia', xMin: 80, xMax: 92, yMin: 60, yMax: 80 }
+    ];
+
+    const initialNodes: Node[] = Array.from({ length: 80 }, (_, i) => {
+      const zone = CONTINENT_ZONES[Math.floor(Math.random() * CONTINENT_ZONES.length)];
+      // Add some randomness to distribution within zones, and occasional "ocean drift" (5% chance)
+      const isDrift = Math.random() < 0.05;
+
+      let x, y;
+      if (isDrift) {
+        x = Math.random() * 90 + 5;
+        y = Math.random() * 80 + 10;
+      } else {
+        x = zone.xMin + Math.random() * (zone.xMax - zone.xMin);
+        y = zone.yMin + Math.random() * (zone.yMax - zone.yMin);
+      }
+
+      return {
+        id: i,
+        x,
+        y,
+        type: Math.random() > 0.8 ? 'colony' : 'spore',
+        size: Math.random() * 4 + 3,
+        nourishment: Math.floor(Math.random() * 10),
+        author: `Observer_${Math.floor(Math.random() * 1000)}`,
+        species: ['Amanita', 'Mycena', 'Cantharellus', 'Russula'][Math.floor(Math.random() * 4)],
+        pulseOffset: Math.random() * Math.PI * 2,
+        location: { lat: 34 + Math.random(), lng: -118 + Math.random() } // Note: lat/lng is just meta-data, rendering uses x/y
+      };
+    });
     setNodes(initialNodes);
 
     const initialComments: Record<number, { author: string; text: string }[]> = {};

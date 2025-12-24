@@ -1,11 +1,23 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { FlaskConical, Play, Pause, RotateCcw, Settings } from "lucide-react";
+import { FlaskConical, Play, Pause, RotateCcw } from "lucide-react";
 import Navigation from "@/components/desktop/Navigation";
 import Footer from "@/components/desktop/Footer";
+import MyceliumLab from "@/components/desktop/MyceliumLab";
 
 const LabPage = () => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [temp, setTemp] = useState(25);
+  const [humidity, setHumidity] = useState(85);
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleReset = () => {
+    setResetKey(prev => prev + 1);
+    setIsPlaying(true);
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       <main className="pt-16">
         {/* Header */}
@@ -38,83 +50,98 @@ const LabPage = () => {
 
         {/* Lab Interface */}
         <section className="grid grid-cols-12 min-h-[70vh]">
-          {/* Control Panel */}
-          <div className="col-span-3 grid-line-r p-6">
+          {/* Control Panel - Left Sidebar */}
+          <div className="col-span-3 grid-line-r p-6 z-10">
             <h3 className="text-label text-foreground/60 mb-6">Parameters</h3>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
+              {/* Temp Slider */}
               <div>
-                <label className="text-meta text-foreground/30 block mb-2">Growth Rate</label>
-                <div className="h-2 bg-card rounded-full overflow-hidden">
-                  <div className="h-full w-2/3 bg-gradient-to-r from-[hsl(var(--aurora-cyan))] to-[hsl(var(--aurora-purple))]" />
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-meta text-foreground/50">Temperature (°C)</label>
+                  <span className="text-label text-[hsl(var(--aurora-gold))]">{temp}°C</span>
                 </div>
-              </div>
-
-              <div>
-                <label className="text-meta text-foreground/30 block mb-2">Nutrient Density</label>
-                <div className="h-2 bg-card rounded-full overflow-hidden">
-                  <div className="h-full w-1/2 bg-gradient-to-r from-[hsl(var(--aurora-magenta))] to-[hsl(var(--aurora-gold))]" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-meta text-foreground/30 block mb-2">Temperature (°C)</label>
                 <input
-                  type="number"
-                  defaultValue={25}
-                  className="w-full bg-card border border-border px-4 py-2 text-label text-foreground"
-                  disabled
+                  type="range"
+                  min="0"
+                  max="50"
+                  value={temp}
+                  onChange={(e) => setTemp(parseInt(e.target.value))}
+                  className="w-full h-1 bg-card appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[hsl(var(--aurora-gold))] hover:[&::-webkit-slider-thumb]:bg-[hsl(var(--aurora-magenta))] transition-colors"
                 />
+                <div className="text-xs mt-2 text-foreground/30">
+                  {temp < 10 ? "Dormant (Too Cold)" : temp > 35 ? "Heat Stress (Critical)" : "Optimal Growth Range"}
+                </div>
               </div>
 
+              {/* Humidity Slider */}
               <div>
-                <label className="text-meta text-foreground/30 block mb-2">Humidity (%)</label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-meta text-foreground/50">Humidity (%)</label>
+                  <span className="text-label text-[hsl(var(--aurora-cyan))]">{humidity}%</span>
+                </div>
                 <input
-                  type="number"
-                  defaultValue={85}
-                  className="w-full bg-card border border-border px-4 py-2 text-label text-foreground"
-                  disabled
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={humidity}
+                  onChange={(e) => setHumidity(parseInt(e.target.value))}
+                  className="w-full h-1 bg-card appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[hsl(var(--aurora-cyan))] hover:[&::-webkit-slider-thumb]:bg-[hsl(var(--aurora-green))] transition-colors"
                 />
               </div>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-2 mt-8 pt-8 grid-line-t">
-              <button className="flex-1 py-3 grid-line flex items-center justify-center gap-2 text-label text-foreground/50 hover:text-foreground hover:bg-card transition-colors">
-                <Play className="w-4 h-4 text-[hsl(var(--aurora-cyan))]" />
+            <div className="flex items-center gap-2 mt-12 pt-8 grid-line-t">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex-1 py-3 grid-line flex items-center justify-center gap-2 text-label text-foreground/50 hover:text-foreground hover:bg-card transition-colors"
+                title={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying ? <Pause className="w-4 h-4 text-[hsl(var(--aurora-cyan))]" /> : <Play className="w-4 h-4 text-[hsl(var(--aurora-cyan))]" />}
               </button>
-              <button className="flex-1 py-3 grid-line flex items-center justify-center gap-2 text-label text-foreground/50 hover:text-foreground hover:bg-card transition-colors">
-                <Pause className="w-4 h-4 text-[hsl(var(--aurora-cyan))]" />
-              </button>
-              <button className="flex-1 py-3 grid-line flex items-center justify-center gap-2 text-label text-foreground/50 hover:text-foreground hover:bg-card transition-colors">
+
+              <button
+                onClick={handleReset}
+                className="flex-1 py-3 grid-line flex items-center justify-center gap-2 text-label text-foreground/50 hover:text-foreground hover:bg-card transition-colors"
+                title="Reset Simulation"
+              >
                 <RotateCcw className="w-4 h-4 text-[hsl(var(--aurora-cyan))]" />
               </button>
             </div>
           </div>
 
           {/* Simulation Area */}
-          <div className="col-span-9 relative bg-card flex items-center justify-center aurora-animated">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              className="text-center"
-            >
-              <FlaskConical className="w-24 h-24 text-foreground/10 mx-auto mb-6" />
-              <span className="text-meta text-foreground/30 block">
-                // Mycelium Simulation Coming Soon //
-              </span>
-              <span className="text-label text-foreground/20 block mt-2">
-                SIMULATION.ENGINE.LOADING
-              </span>
-            </motion.div>
+          <div
+            className="col-span-9 relative overflow-hidden"
+            style={{
+              background: 'radial-gradient(circle at 50% 120%, #1a2c25 0%, #050a08 60%, #000000 100%)'
+            }}
+          >
 
-            {/* Decorative Grid */}
-            <div className="absolute inset-8 grid grid-cols-8 grid-rows-8 pointer-events-none opacity-20">
-              {Array.from({ length: 64 }).map((_, i) => (
-                <div key={i} className="border border-foreground/10" />
-              ))}
-            </div>
+            {/* Digital Grids for Decoration */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-20 z-10"
+              style={{
+                backgroundImage: `linear-gradient(to right, #334155 1px, transparent 1px),
+                                  linear-gradient(to bottom, #334155 1px, transparent 1px)`,
+                backgroundSize: '40px 40px',
+                maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+              }}
+            />
+
+            <MyceliumLab
+              key={resetKey}
+              isPlaying={isPlaying}
+              temp={temp}
+              humidity={humidity}
+            />
+
+            {!isPlaying && (
+              <div className="absolute top-4 right-4 bg-black/50 backdrop-blur px-3 py-1 rounded text-xs text-foreground/50 z-20 border border-white/5">
+                PAUSED
+              </div>
+            )}
           </div>
         </section>
       </main>

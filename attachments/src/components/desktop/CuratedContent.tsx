@@ -1,35 +1,20 @@
 import { motion } from "framer-motion";
 import { AlertTriangle, Sparkles, ChevronRight } from "lucide-react";
+import { mockSpeciesData } from "@/data/speciesData";
+import { newsData } from "@/data/newsData";
+import { Link } from "react-router-dom";
 
-const dailyFungus = {
-  name: "Chanterelle",
-  nameEn: "Cantharellus cibarius",
-  classification: "Basidiomycota / Cantharellaceae",
-  description: "Golden edible fungus with a unique apricot aroma. Commonly found in mixed coniferous forests in summer and autumn.",
-  edibility: "Edible",
-  imageUrl: "https://images.unsplash.com/photo-1504545102780-26774c1bb073?w=800&auto=format",
-};
+// Get Daily Specimen (Blue Milk Mushroom / ID 13)
+const dailyFungus = mockSpeciesData.find(s => s.id === "13") || mockSpeciesData[0];
 
-const alerts = [
-  {
-    type: "warning",
-    region: "YUNNAN",
-    content: "High season for wild mushroom poisoning, avoid unknown species",
-    time: "2h ago",
-  },
-  {
-    type: "discovery",
-    region: "SICHUAN",
-    content: "Discovery: Rare Blue Net Puffball recorded at Mount Emei",
-    time: "5h ago",
-  },
-  {
-    type: "info",
-    region: "GLOBAL",
-    content: "Spore density index increased by 23% this week",
-    time: "1d ago",
-  },
-];
+// Get Live Feed (Last 3 News Items)
+const alerts = newsData.slice(0, 3).map(news => ({
+  id: news.id,
+  type: news.category.toLowerCase() === "discovery" ? "discovery" : news.category.toLowerCase() === "environmental" ? "warning" : "info",
+  region: news.category.toUpperCase(),
+  content: news.title,
+  time: news.date.split(",")[0], // Simple date display
+}));
 
 const CuratedContent = () => {
   return (
@@ -63,7 +48,7 @@ const CuratedContent = () => {
             <div className="relative aspect-[4/3] overflow-hidden grid-line group">
               <img
                 src={dailyFungus.imageUrl}
-                alt={dailyFungus.name}
+                alt={dailyFungus.nameCn}
                 className="absolute inset-0 w-full h-full object-cover grayscale-hover"
               />
               {/* Overlay Grid */}
@@ -81,10 +66,10 @@ const CuratedContent = () => {
             {/* Info */}
             <div className="flex flex-col">
               <span className="text-meta text-foreground/30 mb-2">
-                {dailyFungus.classification}
+                {dailyFungus.category}
               </span>
               <h3 className="text-display-lg font-display mb-1">
-                {dailyFungus.name}
+                {dailyFungus.nameCn}
               </h3>
               <span className="text-label text-foreground/40 italic mb-4">
                 {dailyFungus.nameEn}
@@ -93,13 +78,13 @@ const CuratedContent = () => {
                 {dailyFungus.description}
               </p>
               <div className="mt-auto flex items-center justify-between">
-                <span className="text-meta px-3 py-1 bg-[hsl(var(--aurora-cyan)/0.1)] text-[hsl(var(--aurora-cyan))]">
+                <span className="text-meta px-3 py-1 bg-[hsl(var(--aurora-cyan)/0.1)] text-[hsl(var(--aurora-cyan))] uppercase">
                   {dailyFungus.edibility}
                 </span>
-                <button className="text-label text-foreground/40 hover:text-foreground transition-colors inline-flex items-center gap-1 group">
+                <Link to={`/archive?id=${dailyFungus.id}`} className="text-label text-foreground/40 hover:text-foreground transition-colors inline-flex items-center gap-1 group">
                   VIEW DETAILS
                   <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -119,32 +104,29 @@ const CuratedContent = () => {
           </div>
 
           <div className="space-y-4">
-            {alerts.map((alert, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                className="group p-4 grid-line hover:bg-card transition-colors cursor-pointer"
+            {alerts.map((alert) => (
+              <Link
+                key={alert.id}
+                to={`/news/${alert.id}`}
+                className="group p-4 grid-line hover:bg-card transition-colors cursor-pointer block"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`text-meta px-2 py-0.5 ${alert.type === "warning"
-                        ? "bg-[hsl(var(--aurora-magenta)/0.1)] text-[hsl(var(--aurora-magenta))]"
-                        : alert.type === "discovery"
-                          ? "bg-[hsl(var(--aurora-cyan)/0.1)] text-[hsl(var(--aurora-cyan))]"
-                          : "bg-foreground/5 text-foreground/40"
+                      ? "bg-[hsl(var(--aurora-magenta)/0.1)] text-[hsl(var(--aurora-magenta))]"
+                      : alert.type === "discovery"
+                        ? "bg-[hsl(var(--aurora-cyan)/0.1)] text-[hsl(var(--aurora-cyan))]"
+                        : "bg-foreground/5 text-foreground/40"
                       }`}
                   >
                     {alert.region}
                   </span>
                   <span className="text-meta text-foreground/30">{alert.time}</span>
                 </div>
-                <p className="text-label text-foreground/60 group-hover:text-foreground transition-colors">
+                <p className="text-label text-foreground/60 group-hover:text-foreground transition-colors line-clamp-2">
                   {alert.content}
                 </p>
-              </motion.div>
+              </Link>
             ))}
           </div>
         </motion.div>

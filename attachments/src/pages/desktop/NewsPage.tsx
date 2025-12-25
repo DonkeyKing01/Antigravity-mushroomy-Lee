@@ -5,47 +5,10 @@ import Footer from "@/components/desktop/Footer";
 import { Newspaper, ArrowUpRight, Clock, User, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { newsData } from "@/data/newsData";
+
 const NewsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
-
-    const newsData = [
-        {
-            id: 1,
-            title: "Bio-luminescent Mycelium Networks Discovered in Deep Caves",
-            date: "DEC 24, 2025",
-            category: "Discovery",
-            image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&auto=format&fit=crop",
-            description: "Researchers have identified a rare strain of mycelium that emits a steady cyan glow, facilitating subterranean navigation for certain cave-dwelling species.",
-            author: "Dr. Elena Moss"
-        },
-        {
-            id: 2,
-            title: "Sustainable Architecture: Building with Mushroom Bricks",
-            date: "DEC 22, 2025",
-            category: "Technology",
-            image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop",
-            description: "A new startup is utilizing the structural integrity of fungal hyphae to create carbon-negative construction materials that are stronger than traditional concrete.",
-            author: "Marcus Thorne"
-        },
-        {
-            id: 3,
-            title: "AI-Driven Fungal Identification App Surpasses Human Accuracy",
-            date: "DEC 21, 2025",
-            category: "Innovation",
-            image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&auto=format&fit=crop",
-            description: "Using deep learning models trained on millions of field samples, the MycoNexus AI can now identify over 50,000 species with 99.8% accuracy.",
-            author: "Network Core"
-        },
-        {
-            id: 4,
-            title: "Global Spore Dispersal Patterns Shift Due to Climate Change",
-            date: "DEC 19, 2025",
-            category: "Environmental",
-            image: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800&auto=format&fit=crop",
-            description: "A multi-year study reveals how changing wind currents and temperature fluctuations are pushing traditionally tropical fungal species into temperate zones.",
-            author: "Prof. Silas Vane"
-        }
-    ];
 
     const filteredNews = newsData.filter(news =>
         news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

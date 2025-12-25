@@ -117,7 +117,8 @@ const FeatureGrid = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-1 lg:grid-cols-3 min-h-[600px]"
+        className="grid grid-cols-1 lg:grid-cols-3 min-h-[600px] relative bg-no-repeat bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/shortcut-bg.png')" }}
       >
         {/* Left Column (Archive, Map) */}
         <div className="flex flex-col border-r border-border/40">
@@ -164,7 +165,7 @@ const FeatureCard = ({ feature, isLarge }: FeatureCardProps) => {
   return (
     <Link
       to={feature.path}
-      className="group relative h-full flex flex-col p-8 transition-colors duration-500 hover:bg-card"
+      className="group relative h-full flex flex-col p-8 transition-all duration-500 bg-background/95 hover:bg-black/50"
     >
       {/* Decorative Index */}
       <span

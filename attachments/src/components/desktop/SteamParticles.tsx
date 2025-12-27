@@ -38,18 +38,18 @@ const SteamParticles = ({ count = 500, intensity = 0 }: SteamParticlesProps) => 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
 
-      // Spawn particles from pot center
+      // Spawn particles from pot center - Initial state very small radius
       const angle = Math.random() * Math.PI * 2;
-      const radius = Math.random() * 1.5;
+      const radius = Math.random() * 0.5; // Reduced base radius
 
       positions[i3] = Math.cos(angle) * radius;
       positions[i3 + 1] = -2; // Start below
       positions[i3 + 2] = Math.sin(angle) * radius;
 
-      // Upward velocity with turbulence
-      velocities[i3] = (Math.random() - 0.5) * 0.02;
-      velocities[i3 + 1] = 0.02 + Math.random() * 0.03; // rise speed
-      velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+      // Upward velocity - Initial very slow
+      velocities[i3] = (Math.random() - 0.5) * 0.01;
+      velocities[i3 + 1] = 0.005 + Math.random() * 0.01; // Reduced base speed
+      velocities[i3 + 2] = (Math.random() - 0.5) * 0.01;
 
       ages[i] = Math.random() * 100;
       maxAge[i] = 50 + Math.random() * 50;
@@ -81,23 +81,23 @@ const SteamParticles = ({ count = 500, intensity = 0 }: SteamParticlesProps) => 
         // Spawn particles from pot center (concentrated)
         const angle = Math.random() * Math.PI * 2;
         // Radius increases with intensity
-        const radius = Math.random() * (0.8 + currentIntensity * 0.5);
+        const radius = Math.random() * (0.4 + currentIntensity * 1.2);
 
         positions[i3] = Math.cos(angle) * radius;
         positions[i3 + 1] = -1.2; // Start closer to center
         positions[i3 + 2] = Math.sin(angle) * radius;
 
         // Increased velocity with intensity
-        velocities[i3] = (Math.random() - 0.5) * (0.02 + currentIntensity * 0.02);
-        velocities[i3 + 1] = 0.02 + Math.random() * 0.03 + (currentIntensity * 0.05);
-        velocities[i3 + 2] = (Math.random() - 0.5) * (0.02 + currentIntensity * 0.02);
+        velocities[i3] = (Math.random() - 0.5) * (0.01 + currentIntensity * 0.03);
+        velocities[i3 + 1] = 0.005 + Math.random() * 0.01 + (currentIntensity * 0.08);
+        velocities[i3 + 2] = (Math.random() - 0.5) * (0.01 + currentIntensity * 0.03);
 
         ages[i] = 0;
         maxAge[i] = 50 + Math.random() * 50;
       }
 
       // Apply turbulence
-      const turbulence = Math.sin(ages[i] * 0.1) * (0.005 + currentIntensity * 0.005);
+      const turbulence = Math.sin(ages[i] * 0.1) * (0.002 + currentIntensity * 0.008);
       velocities[i3] += (Math.random() - 0.5) * turbulence;
       velocities[i3 + 2] += (Math.random() - 0.5) * turbulence;
 
@@ -117,11 +117,11 @@ const SteamParticles = ({ count = 500, intensity = 0 }: SteamParticlesProps) => 
       <PointMaterial
         transparent
         vertexColors
-        size={0.15 + intensity * 0.15} // Scale size with intensity
+        size={0.05 + intensity * 0.25} // Scale size with intensity
         sizeAttenuation={true}
         depthWrite={false}
         blending={THREE.AdditiveBlending}
-        opacity={0.4 + intensity * 0.2}
+        opacity={0.3 + intensity * 0.3} // Also prevent too faint initially? Or allow faint.
       />
       <bufferAttribute
         attach="geometry-attributes-color"

@@ -132,15 +132,37 @@ const Navigation = () => {
     >
       <div className="w-full px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <span className="text-label text-foreground/60 group-hover:text-foreground transition-colors">
-            MYCO
-          </span>
-          <span className="text-foreground/30">//</span>
-          <span className="text-label text-foreground group-hover:text-[hsl(var(--aurora-cyan))] transition-colors">
-            NEXUS
-          </span>
-        </Link>
+        {/* Breadcrumbs / Logo */}
+        <div className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <span className="text-label text-foreground/60">MYCO</span>
+            <span className="text-foreground/30">//</span>
+            <span className="text-label text-foreground">NEXUS</span>
+          </Link>
+
+          {location.pathname !== "/" && (
+            <div className="flex items-center gap-2">
+              {location.pathname.split("/").filter(Boolean).map((segment, index, array) => {
+                const path = `/${array.slice(0, index + 1).join("/")}`;
+                // Find label in navItems or capitalize
+                const item = navItems.find(n => n.path === path);
+                const label = item ? item.label : segment.toUpperCase();
+
+                return (
+                  <div key={path} className="flex items-center gap-2">
+                    <span className="text-foreground/30">//</span>
+                    <Link
+                      to={path}
+                      className="text-label text-foreground hover:text-[hsl(var(--aurora-cyan))] transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {/* Navigation Links */}
         <div className="flex items-center gap-1">

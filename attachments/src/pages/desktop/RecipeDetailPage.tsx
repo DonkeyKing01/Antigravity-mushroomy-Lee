@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, Link } from "react-router-dom";
 import {
@@ -14,6 +15,40 @@ import {
 } from "lucide-react";
 import Navigation from "@/components/desktop/Navigation";
 import Footer from "@/components/desktop/Footer";
+
+// Helper to get ingredient icons
+const getIngredientIcon = (name: string) => {
+  const lower = name.toLowerCase();
+  let imgSrc = "";
+  if (lower.includes("matsutake")) imgSrc = "/images/recipes/matsutake-soup/matsutake.png";
+  else if (lower.includes("chanterelle")) imgSrc = "/images/recipes/matsutake-soup/chanterelle.png";
+  else if (lower.includes("hen") || lower.includes("chicken")) imgSrc = "/images/recipes/matsutake-soup/hen.png";
+  else if (lower.includes("ginger")) imgSrc = "/images/recipes/matsutake-soup/ginger.png";
+  else if (lower.includes("water")) imgSrc = "/images/recipes/matsutake-soup/water.png";
+
+  if (imgSrc) {
+    return (
+      <div className="w-12 h-12 rounded-lg overflow-hidden border border-border/50 bg-black/20">
+        <img src={imgSrc} alt={name} className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+
+  return <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center"><CircleDot className="w-4 h-4 text-foreground/50" /></div>;
+};
+
+// Helper to get step illustration
+const getStepIllustration = (stepNumber: number) => {
+  return (
+    <div className="w-full aspect-video bg-black/20 rounded-lg mb-6 overflow-hidden border border-border/50 shadow-lg">
+      <img
+        src={`/images/recipes/matsutake-soup/step_${stepNumber}.png`}
+        alt={`Step ${stepNumber}`}
+        className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+      />
+    </div>
+  );
+}
 
 // Mock AI generated recipe
 const mockRecipe = {
@@ -83,6 +118,14 @@ const RecipeDetailPage = () => {
   const handleStepComplete = (stepNumber: number) => {
     if (!completedSteps.includes(stepNumber)) {
       setCompletedSteps(prev => [...prev, stepNumber]);
+      toast.success("Step Completed!");
+
+      // Auto-advance
+      if (stepNumber < mockRecipe.steps.length - 1) {
+        setTimeout(() => {
+          setCurrentStep(stepNumber + 1);
+        }, 1000);
+      }
     }
   };
 
@@ -101,9 +144,9 @@ const RecipeDetailPage = () => {
       <main className="pt-16">
         {/* Recipe Header */}
         <section className="grid-line-b">
-          <div className="max-w-[1440px] mx-auto grid grid-cols-12">
-            {/* Left: AI Chef Notes */}
-            <div className="col-span-7 grid-line-r p-8">
+          <div className="max-w-[1440px] mx-auto grid grid-cols-12 min-h-[80vh]">
+            {/* Left: AI Chef Notes (Narrower) */}
+            <div className="col-span-4 grid-line-r p-8 bg-card/30 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -116,12 +159,11 @@ const RecipeDetailPage = () => {
                   </span>
                 </div>
 
-                {/* Typewriter Effect Simulation */}
                 <motion.h1
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 1, delay: 0.2 }}
-                  className="text-display-lg font-display mb-6"
+                  className="text-4xl font-display mb-6 leading-tight"
                 >
                   {mockRecipe.title}
                 </motion.h1>
@@ -130,54 +172,47 @@ const RecipeDetailPage = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-label text-foreground/60 leading-relaxed mb-8"
+                  className="text-label text-foreground/60 leading-relaxed mb-8 text-sm"
                 >
                   {mockRecipe.description}
                 </motion.p>
 
-                {/* Meta Info */}
-                <div className="grid grid-cols-3 gap-6 mb-8">
-                  <div className="p-4 bg-card grid-line">
-                    <span className="text-meta text-foreground/30 block mb-2">
-                      Difficulty
-                    </span>
-                    <span className={`text-label text-[hsl(var(--${difficultyColor}))]`}>
-                      {mockRecipe.difficultyLabel}
-                    </span>
+                {/* Compact Meta Info */}
+                <div className="flex flex-wrap gap-4 mb-8">
+                  <div className="px-3 py-1 bg-card border border-border rounded-full text-xs text-foreground/60 flex items-center gap-2">
+                    <Clock className="w-3 h-3" /> {mockRecipe.cookingTime}m
                   </div>
-                  <div className="p-4 bg-card grid-line">
-                    <span className="text-meta text-foreground/30 block mb-2 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {mockRecipe.cookingTime} Mins
-                    </span>
+                  <div className="px-3 py-1 bg-card border border-border rounded-full text-xs text-foreground/60 flex items-center gap-2">
+                    <Users className="w-3 h-3" /> {mockRecipe.servings}
                   </div>
-                  <div className="p-4 bg-card grid-line">
-                    <span className="text-meta text-foreground/30 block mb-2 flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      {mockRecipe.servings} Servings
-                    </span>
+                  <div className={`px-3 py-1 border border-transparent bg-[hsl(var(--${difficultyColor})/0.1)] text-[hsl(var(--${difficultyColor}))] rounded-full text-xs`}>
+                    {mockRecipe.difficultyLabel}
                   </div>
                 </div>
 
-                {/* Ingredients List */}
+                {/* Ingredients List with Icons */}
                 <div>
-                  <h3 className="text-label text-foreground/60 mb-4">Ingredients</h3>
-                  <div className="space-y-2">
+                  <h3 className="text-label text-foreground/60 mb-4 uppercase tracking-wider text-xs">Ingredients</h3>
+                  <div className="space-y-3">
                     {mockRecipe.ingredients.map((ing, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                        className={`flex items-center justify-between p-3 ${ing.isMain
-                          ? "bg-[hsl(var(--aurora-cyan)/0.1)] border border-[hsl(var(--aurora-cyan)/0.2)]"
-                          : "bg-card"
+                        className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${ing.isMain
+                          ? "bg-[hsl(var(--aurora-cyan)/0.05)] border-[hsl(var(--aurora-cyan)/0.2)]"
+                          : "bg-background/50 border-transparent hover:border-border"
                           }`}
                       >
-                        <span className="text-label text-foreground/70">
-                          {ing.name}
-                        </span>
-                        <span className="text-meta text-foreground/40">
+                        {getIngredientIcon(ing.name)}
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-foreground/80 block">
+                            {ing.name}
+                          </span>
+                          {ing.isMain && <span className="text-[10px] text-[hsl(var(--aurora-cyan))] uppercase tracking-wider">Key Item</span>}
+                        </div>
+                        <span className="text-sm font-mono text-foreground/50">
                           {ing.quantity}
                         </span>
                       </motion.div>
@@ -187,135 +222,118 @@ const RecipeDetailPage = () => {
               </motion.div>
             </div>
 
-            {/* Right: Cooking Steps */}
-            <div className="col-span-5 p-8">
+            {/* Right: Cooking Steps (Wider) */}
+            <div className="col-span-8 p-12 bg-background relative">
+              {/* Background Decoration */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[hsl(var(--aurora-cyan)/0.03)] rounded-full blur-3xl pointer-events-none" />
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                className="max-w-3xl mx-auto"
               >
-                <h3 className="text-label text-foreground/60 mb-6 flex items-center gap-2">
+                <h3 className="text-label text-foreground/60 mb-8 flex items-center gap-2">
                   <Flame className="w-4 h-4" />
                   COOKING STEPS
                 </h3>
 
-                {/* Step Navigation */}
-                <div className="flex items-center gap-3 mb-6">
-                  <button
-                    onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
-                    disabled={currentStep === 0}
-                    className="p-2 grid-line text-foreground/50 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-
-                  <div className="flex-1 flex items-center gap-1">
-                    {mockRecipe.steps.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentStep(index)}
-                        className="flex-1 h-1 bg-foreground/10 hover:bg-foreground/20 transition-colors"
-                      >
-                        <div
-                          className={`h-full transition-all duration-300 ${index === currentStep
-                            ? "bg-[hsl(var(--aurora-cyan))]"
-                            : completedSteps.includes(index)
-                              ? "bg-foreground/30"
-                              : "bg-transparent"
-                            }`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => setCurrentStep(prev => Math.min(mockRecipe.steps.length - 1, prev + 1))}
-                    disabled={currentStep === mockRecipe.steps.length - 1}
-                    className="p-2 grid-line text-foreground/50 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
+                {/* Step Navigation Progress */}
+                <div className="flex items-center gap-4 mb-12">
+                  {mockRecipe.steps.map((_, idx) => (
+                    <div key={idx} className="flex-1 h-1 bg-border rounded-full overflow-hidden">
+                      <motion.div
+                        initial={false}
+                        animate={{
+                          width: idx < currentStep ? "100%" : idx === currentStep ? "100%" : "0%",
+                          opacity: idx <= currentStep ? 1 : 0
+                        }}
+                        className={`h-full ${idx === currentStep ? "bg-[hsl(var(--aurora-cyan))]" : "bg-foreground/30"}`}
+                      />
+                    </div>
+                  ))}
                 </div>
 
                 {/* Current Step Display */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentStep}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
                     transition={{ duration: 0.4 }}
-                    className="mb-6"
+                    className="mb-12"
                   >
-                    <div className="p-6 bg-card grid-line">
+                    <div className="p-8 bg-card border border-border rounded-2xl shadow-2xl relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-4 opacity-10 font-display text-9xl leading-none select-none pointer-events-none">
+                        {currentStep + 1}
+                      </div>
+
+                      {/* Illustration Area */}
+                      {getStepIllustration(currentStep + 1)}
+
                       {/* Step Header */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-display text-foreground/30">
-                          {String(currentStep + 1).padStart(2, "0")}
-                        </span>
-                        <div className="flex items-center gap-4 text-meta text-foreground/40">
-                          {mockRecipe.steps[currentStep].temperature && (
-                            <span className="flex items-center gap-1">
-                              <Flame className="w-3 h-3" />
-                              {mockRecipe.steps[currentStep].temperature}
-                            </span>
-                          )}
-                          {mockRecipe.steps[currentStep].duration && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {mockRecipe.steps[currentStep].duration}min
-                            </span>
-                          )}
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="px-3 py-1 rounded-full bg-foreground/5 text-xs text-foreground/60 font-mono">
+                          STEP {String(currentStep + 1).padStart(2, '0')}
                         </div>
+                        {mockRecipe.steps[currentStep].temperature && (
+                          <div className="flex items-center gap-1 text-xs text-[hsl(var(--aurora-gold))]">
+                            <Flame className="w-3 h-3" /> {mockRecipe.steps[currentStep].temperature}
+                          </div>
+                        )}
+                        {mockRecipe.steps[currentStep].duration && (
+                          <div className="flex items-center gap-1 text-xs text-foreground/40">
+                            <Clock className="w-3 h-3" /> {mockRecipe.steps[currentStep].duration} min
+                          </div>
+                        )}
                       </div>
 
                       {/* Instruction */}
-                      <p className="text-label text-foreground/80 leading-relaxed">
+                      <p className="text-xl md:text-2xl font-light text-foreground/90 leading-relaxed mb-8">
                         {mockRecipe.steps[currentStep].instruction}
                       </p>
 
                       {/* Complete Button */}
-                      <button
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.02 }}
                         onClick={() => handleStepComplete(currentStep)}
                         disabled={completedSteps.includes(currentStep)}
-                        className="mt-6 w-full py-2 grid-line text-meta text-foreground/50 hover:text-foreground hover:bg-background transition-colors disabled:opacity-50"
+                        className={`
+                            px-8 py-3 rounded-lg flex items-center gap-2 transition-all w-full justify-center md:w-auto
+                            ${completedSteps.includes(currentStep)
+                            ? "bg-green-500/10 text-green-500 cursor-default"
+                            : "bg-[hsl(var(--aurora-cyan))] text-black hover:bg-[hsl(var(--aurora-cyan)/0.9)] shadow-[0_0_20px_hsl(var(--aurora-cyan)/0.3)]"
+                          }
+                        `}
                       >
-                        {completedSteps.includes(currentStep) ? "✓ Completed" : "Mark as Complete"}
-                      </button>
+                        {completedSteps.includes(currentStep) ? (
+                          <><Sparkles className="w-5 h-5" /> Step Completed</>
+                        ) : (
+                          <><Circle className="w-5 h-5" /> Mark as Complete</>
+                        )}
+                      </motion.button>
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
-                {/* All Steps Overview */}
-                <div className="space-y-2">
-                  {mockRecipe.steps.map((step, index) => (
+                {/* Step List Overview Context */}
+                <div className="space-y-2 opacity-50 hover:opacity-100 transition-opacity">
+                  {mockRecipe.steps.map((step, idx) => (
                     <button
-                      key={index}
-                      onClick={() => setCurrentStep(index)}
-                      className={`w-full p-3 grid-line flex items-center gap-3 transition-all ${index === currentStep
-                        ? "bg-card"
-                        : "bg-transparent hover:bg-card/50"
-                        }`}
+                      key={idx}
+                      onClick={() => setCurrentStep(idx)}
+                      className={`w-full text-left p-4 rounded-lg flex items-center gap-4 transition-colors ${idx === currentStep ? "bg-foreground/5" : "hover:bg-foreground/5"}`}
                     >
-                      {completedSteps.includes(index) ? (
-                        <CircleDot className="w-4 h-4 text-[hsl(var(--aurora-cyan))] flex-shrink-0" />
-                      ) : (
-                        <Circle className="w-4 h-4 text-foreground/30 flex-shrink-0" />
-                      )}
-                      <span className={`text-meta flex-1 text-left ${index === currentStep
-                        ? "text-foreground"
-                        : "text-foreground/40"
-                        }`}>
-                        Step {index + 1}
+                      <div className={`w-2 h-2 rounded-full ${idx === currentStep ? "bg-[hsl(var(--aurora-cyan))]" : completedSteps.includes(idx) ? "bg-foreground/30" : "bg-foreground/10"}`} />
+                      <span className={`text-sm ${idx === currentStep ? "text-foreground" : "text-foreground/40"}`}>
+                        {step.instruction.substring(0, 50)}...
                       </span>
-                      {step.duration && (
-                        <span className="text-meta text-foreground/30">
-                          {step.duration}'
-                        </span>
-                      )}
                     </button>
                   ))}
                 </div>
+
               </motion.div>
             </div>
           </div>

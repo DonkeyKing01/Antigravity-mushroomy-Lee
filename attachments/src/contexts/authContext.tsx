@@ -34,11 +34,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (email: string, password: string): boolean => {
         // Mock login - always succeed
         const safeEmail = email || "researcher@myco.network";
+        const avatars = [
+            "/images/avatars/mushroom.png",
+            "/images/avatars/beaker.png"
+        ];
+        const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+
         const mockUser: User = {
             id: "usr_" + Math.random().toString(36).substr(2, 9),
             username: safeEmail.split("@")[0] || "Researcher",
             email: safeEmail,
-            avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${safeEmail}`,
+            avatar: randomAvatar,
             joinDate: new Date().toISOString(),
             contributions: Math.floor(Math.random() * 50) + 10,
             discoveries: Math.floor(Math.random() * 20) + 5,
@@ -53,11 +59,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const safeUsername = username || "New Researcher";
         const safeEmail = email || "researcher@myco.network";
 
+        const avatars = [
+            "/images/avatars/mushroom.png",
+            "/images/avatars/beaker.png"
+        ];
+        const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+
         const mockUser: User = {
             id: "usr_" + Math.random().toString(36).substr(2, 9),
             username: safeUsername,
             email: safeEmail,
-            avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${safeUsername}`,
+            avatar: randomAvatar,
             joinDate: new Date().toISOString(),
             contributions: 0,
             discoveries: 0,

@@ -56,13 +56,13 @@ const SimulationSection = () => {
             <div className="md:col-span-1 space-y-8 pr-2 custom-scrollbar overflow-y-auto">
 
                 {/* Species Selection */}
-                <div className="space-y-4 rounded-xl bg-white/5 p-4 border border-white/10">
+                <div className="space-y-4 rounded-xl bg-transparent dark:bg-white/5 p-4 border border-border/50 dark:border-white/10">
                     <label className="text-meta text-foreground/50">Specimen</label>
                     <div className="space-y-2">
                         {speciesList.map((s) => {
                             const isUnlocked = unlockedSpecies.includes(s.id);
                             return (
-                                <div key={s.id} className="flex justify-between items-center p-2 rounded bg-black/20 text-sm">
+                                <div key={s.id} className="flex justify-between items-center p-2 rounded bg-transparent dark:bg-black/20 border border-border/30 dark:border-transparent text-sm shadow-none">
                                     <span className={isUnlocked ? "text-foreground" : "text-foreground/40"}>{s.name}</span>
                                     {isUnlocked ? (
                                         <button
@@ -162,7 +162,7 @@ const SimulationSection = () => {
             </div>
 
             {/* Visualizer */}
-            <div className="md:col-span-3 relative rounded-xl overflow-hidden border border-white/10 bg-[#050a08]">
+            <div className="md:col-span-3 relative rounded-xl overflow-hidden border border-border/50 dark:border-white/10 bg-transparent dark:bg-[#050a08]">
                 {/* Environmental Overlays */}
 
                 {/* Temperature Tint */}
@@ -198,8 +198,9 @@ const SimulationSection = () => {
                 <div
                     className="absolute inset-0 pointer-events-none opacity-20 z-0"
                     style={{
-                        backgroundImage: `linear-gradient(to right, #334155 1px, transparent 1px),
-                                  linear-gradient(to bottom, #334155 1px, transparent 1px)`,
+                        backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px),
+                                  linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
+                        color: 'var(--border)', // Theme-aware grid color
                         backgroundSize: '40px 40px',
                         maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
                     }}
@@ -214,7 +215,7 @@ const SimulationSection = () => {
                 />
 
                 {!isPlaying && (
-                    <div className="absolute top-4 right-4 bg-black/50 backdrop-blur px-3 py-1 rounded text-xs text-foreground/50 z-30 border border-white/5">
+                    <div className="absolute top-4 right-4 bg-white/80 dark:bg-black/50 backdrop-blur px-3 py-1 rounded text-xs text-foreground/50 z-30 border border-border">
                         PAUSED
                     </div>
                 )}

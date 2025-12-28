@@ -88,7 +88,7 @@ const KnowledgeSection = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="bg-card/50 backdrop-blur border border-white/10 rounded-2xl p-8 relative overflow-hidden"
+                        className="bg-transparent dark:bg-card/50 backdrop-blur border border-border/50 dark:border-white/10 rounded-2xl p-8 relative overflow-hidden"
                     >
                         {/* Card Decoration */}
                         <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -102,7 +102,7 @@ const KnowledgeSection = () => {
 
                             <div className="grid grid-cols-1 gap-3">
                                 {currentQuestion.options.map((option, idx) => {
-                                    let stateClass = "border-white/10 hover:bg-white/5";
+                                    let stateClass = "border-border dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5";
                                     if (isAnswered) {
                                         if (idx === currentQuestion.correctIndex) {
                                             stateClass = "bg-green-500/20 border-green-500/50 text-green-200";

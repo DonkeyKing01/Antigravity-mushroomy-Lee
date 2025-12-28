@@ -52,7 +52,7 @@ const NewsPage = () => {
                                     placeholder="SEARCH NETWORK..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-card/30 border border-border/50 py-3 pl-12 pr-4 text-xs font-mono tracking-widest focus:outline-none focus:border-[hsl(var(--aurora-cyan))] focus:bg-card/50 transition-all placeholder:text-foreground/10"
+                                    className="w-full bg-black/5 dark:bg-card/30 border border-border/50 py-3 pl-12 pr-4 text-xs font-mono tracking-widest focus:outline-none focus:border-[hsl(var(--aurora-cyan))] focus:bg-card/50 transition-all placeholder:text-foreground/30 dark:placeholder:text-foreground/10"
                                 />
                             </motion.div>
 
@@ -86,7 +86,7 @@ const NewsPage = () => {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="group relative bg-card grid-line overflow-hidden"
+                                        className="group relative bg-transparent dark:bg-card grid-line overflow-hidden border-b border-border/50 dark:border-transparent"
                                     >
                                         <Link to={`/news/${news.id}`} className="flex flex-col md:flex-row items-stretch hover:border-[hsl(var(--aurora-cyan))] transition-colors border border-transparent min-h-[160px]">
                                             {/* Left: Image Placeholder */}
@@ -96,9 +96,9 @@ const NewsPage = () => {
                                                     className="absolute inset-0 w-full h-full object-cover transition-all duration-700 opacity-60 group-hover:opacity-100 group-hover:scale-105"
                                                     alt={news.title}
                                                 />
-                                                <div className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors z-[1]" />
-                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/90 z-[2]" />
-                                                <Newspaper className="w-10 h-10 text-[hsl(var(--aurora-cyan))/10] absolute z-0" />
+                                                <div className="absolute inset-0 bg-transparent dark:bg-background/20 group-hover:bg-transparent transition-colors z-[1]" />
+                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent dark:to-card/90 z-[2]" />
+                                                <Newspaper className="w-10 h-10 text-[hsl(var(--aurora-cyan))/30] dark:text-[hsl(var(--aurora-cyan))/10] absolute z-0" />
                                                 {/* Link Icon Overlay */}
                                                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                                     <ArrowUpRight className="w-5 h-5 text-[hsl(var(--aurora-cyan))]" />

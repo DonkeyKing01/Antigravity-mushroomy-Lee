@@ -6,7 +6,64 @@
 
 @layer base {
     :root {
-        /* Organic Modernism Palette */
+        /* Scientific Light Palette (Default/Paper) */
+
+        /* Background - Old Paper / Scientific Journal */
+        --background: 40 25% 88%;
+        /* Ink Black / Dark Earth -- Deepened */
+        --foreground: 30 25% 5%;
+
+        /* Card - White / Clean Paper */
+        --card: 0 0% 100%;
+        --card-foreground: 30 25% 5%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 30 25% 5%;
+
+        /* Primary - Forest Green (Darker for light bg) */
+        --primary: 160 40% 40%;
+        --primary-foreground: 0 0% 98%;
+
+        --secondary: 40 10% 92%;
+        --secondary-foreground: 30 25% 5%;
+
+        --muted: 40 10% 90%;
+        --muted-foreground: 30 15% 20%;
+
+        /* Accent - Research Gold */
+        --accent: 45 65% 50%;
+        --accent-foreground: 30 25% 5%;
+
+        --destructive: 15 60% 45%;
+        --destructive-foreground: 0 0% 98%;
+
+        --border: 40 15% 70%;
+        --input: 40 15% 70%;
+        --ring: 160 40% 40%;
+
+        --radius: 0.5rem;
+
+        /* Aurora/Special Mappings for Light Mode */
+        --aurora-cyan: 160 45% 40%;
+        /* Darker Teal */
+        --aurora-magenta: 15 60% 50%;
+        /* Rich Rust */
+        --aurora-purple: 210 40% 45%;
+        /* Slate Blue */
+        --aurora-gold: 45 70% 45%;
+        /* Dark Gold */
+
+        --structural-line: 40 15% 70%;
+        /* Deepened Grey Lines */
+
+        /* Fonts */
+        --font-sans: 'Inter', sans-serif;
+        --font-serif: 'Playfair Display', 'Noto Serif SC', serif;
+        --font-mono: 'Space Mono', 'Noto Serif SC', monospace;
+    }
+
+    .dark {
+        /* Organic Modernism Palette (Original Dark) */
 
         /* Backgrounds - Deep & Earthy */
         --background: 30 20% 8%;
@@ -47,53 +104,13 @@
         --ring: 160 45% 55%;
         /* Ghost Fungus Ring (Muted) */
 
-        --radius: 0.5rem;
-
-        /* Custom Organic Palette (for specific non-shadcn usage) */
-        --organic-moss: 140 25% 10%;
-        --organic-humus: 30 20% 8%;
-        --organic-ghost: 160 85% 75%;
-        --organic-slime: 45 95% 60%;
-        --organic-spore: 15 65% 50%;
-        --organic-abyss: 210 30% 12%;
-
-        /* Lighting & Texture */
-        --structural-line: 140 20% 18%;
-
-        --font-sans: 'Inter', sans-serif;
-        --font-serif: 'Playfair Display', 'Noto Serif SC', serif;
-        --font-mono: 'Space Mono', 'Noto Serif SC', monospace;
         /* Aurora Mapped to Organic - Muted */
         --aurora-cyan: 160 45% 55%;
-        /* Ghost Fungus - Reduced brightness */
         --aurora-magenta: 15 50% 45%;
-        /* Spore Rust - Reduced brightness */
         --aurora-purple: 210 35% 40%;
-        /* Deep Sea Lighter - Slightly brighter */
         --aurora-gold: 45 65% 50%;
-        /* Slime Mold - Reduced brightness */
-    }
 
-    .dark {
-        --background: 30 20% 8%;
-        --foreground: 45 20% 90%;
-        --card: 140 25% 10%;
-        --card-foreground: 45 20% 90%;
-        --popover: 140 25% 10%;
-        --popover-foreground: 45 20% 90%;
-        --primary: 160 45% 55%;
-        --primary-foreground: 140 25% 10%;
-        --secondary: 210 30% 12%;
-        --secondary-foreground: 45 20% 90%;
-        --muted: 30 20% 12%;
-        --muted-foreground: 30 10% 60%;
-        --accent: 45 65% 50%;
-        --accent-foreground: 30 20% 8%;
-        --destructive: 15 50% 45%;
-        --destructive-foreground: 45 20% 90%;
-        --border: 140 20% 18%;
-        --input: 140 20% 18%;
-        --ring: 160 45% 55%;
+        --structural-line: 140 20% 18%;
     }
 }
 

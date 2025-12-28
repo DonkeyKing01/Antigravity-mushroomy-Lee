@@ -69,7 +69,7 @@ const IdentificationSection = () => {
     };
 
     return (
-        <div className="h-full flex flex-col relative overflow-hidden rounded-lg border border-white/5 bg-black/40 backdrop-blur-sm">
+        <div className="h-full flex flex-col relative overflow-hidden rounded-lg border border-border/50 dark:border-white/5 bg-transparent dark:bg-black/40 backdrop-blur-sm">
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
                 {messages.map((msg, idx) => (
@@ -83,7 +83,7 @@ const IdentificationSection = () => {
               max-w-[80%] rounded-2xl p-4
               ${msg.type === "user"
                                 ? "bg-[hsl(var(--aurora-cyan)/0.15)] border border-[hsl(var(--aurora-cyan)/0.2)] text-foreground"
-                                : "bg-card border border-white/10 text-foreground/80"}
+                                : "bg-transparent dark:bg-card border border-border dark:border-white/10 text-foreground/80"}
             `}>
                             {msg.image && (
                                 <div className="mb-3 rounded-lg overflow-hidden border border-white/10">
@@ -112,7 +112,7 @@ const IdentificationSection = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-white/5 bg-black/20">
+            <div className="p-4 border-t border-border/50 dark:border-white/5 bg-transparent dark:bg-black/20">
                 <div className="relative flex items-center gap-3">
                     <button
                         onClick={() => fileInputRef.current?.click()}

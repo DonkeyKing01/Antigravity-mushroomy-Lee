@@ -21,7 +21,7 @@ const LabPage = () => {
       <main className="flex-1 pt-20 px-8 pb-8 flex flex-col max-w-[1920px] mx-auto w-full">
 
         {/* Header Section */}
-        <section className="flex justify-between items-end mb-8 border-b border-white/5 pb-8">
+        <section className="flex justify-between items-end mb-8 border-b border-border pb-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -35,7 +35,7 @@ const LabPage = () => {
           </motion.div>
 
           {/* Tab Navigation */}
-          <div className="flex gap-1 bg-white/5 p-1 rounded-lg">
+          <div className="flex gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-lg">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -44,7 +44,7 @@ const LabPage = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`
                      relative px-6 py-3 rounded-md transition-all duration-300 flex flex-col items-start min-w-[140px]
-                     ${isActive ? 'bg-[hsl(var(--aurora-cyan)/0.15)] text-foreground' : 'hover:bg-white/5 text-foreground/40'}
+                     ${isActive ? 'bg-[hsl(var(--aurora-cyan)/0.15)] text-foreground' : 'hover:bg-black/5 dark:hover:bg-white/5 text-foreground/40'}
                    `}
                 >
                   <span className={`text-[10px] tracking-wider mb-1 ${isActive ? 'text-[hsl(var(--aurora-cyan))]' : ''}`}>
@@ -65,7 +65,7 @@ const LabPage = () => {
         </section>
 
         {/* Content Area */}
-        <div className="relative min-h-[80vh] bg-black/20 rounded-2xl border border-white/5 overflow-hidden backdrop-blur-sm">
+        <div className="relative min-h-[80vh] bg-transparent dark:bg-black/20 rounded-2xl border border-border/50 dark:border-white/5 overflow-hidden backdrop-blur-sm">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { X, Droplets, MessageCircle, Send } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 export interface Node {
     id: number;
@@ -74,6 +75,53 @@ const FungalMap: React.FC<FungalMapProps> = ({
     replyMode,
     setReplyMode
 }) => {
+    const { resolvedTheme } = useTheme();
+    // Default to dark if undefined during SSR or initial load
+    const isDark = resolvedTheme !== 'light';
+
+    const THEME_COLORS = {
+        dark: {
+            userFill: 'rgba(210, 160, 44, 0.2)',
+            userCore: '#d2a02c',
+            userConn: 'rgba(235, 179, 66, 0.3)',
+            colonyFill: 'rgba(172, 83, 57, 0.2)',
+            colonyCore: '#ac5339',
+            sporeFill: 'rgba(77, 203, 168, 0.1)',
+            sporeCore: '#4dcba8',
+            hyphaeBase: '184, 242, 230', // RGB for rgba template
+            pulseStroke: '235, 179, 66',
+            pulseShadow: '#ebcc42',
+            pulseDot: '#fff',
+            bubbleFill: 'rgba(10, 20, 30, 0.8)',
+            bubbleStroke: 'rgba(255, 255, 255, 0.1)',
+            bubbleText: '#fff',
+            mapFilter: 'invert(1) grayscale(0.8) brightness(0.8) contrast(1.1)',
+            mapOpacity: '0.4',
+            mapBlend: 'screen'
+        },
+        light: {
+            userFill: 'rgba(184, 134, 11, 0.15)',
+            userCore: '#b8860b',
+            userConn: 'rgba(184, 134, 11, 0.4)',
+            colonyFill: 'rgba(240, 230, 140, 0.4)',
+            colonyCore: '#e3d26f', // Light Yellow
+            sporeFill: 'rgba(240, 230, 140, 0.4)',
+            sporeCore: '#e3d26f', // Light Yellow (somewhat visible)
+            hyphaeBase: '60, 70, 60', // Dark grey/green (Ink)
+            pulseStroke: '200, 150, 50',
+            pulseShadow: '#daa520',
+            pulseDot: '#332',
+            bubbleFill: 'rgba(250, 250, 245, 0.9)',
+            bubbleStroke: 'rgba(0, 0, 0, 0.15)',
+            bubbleText: '#1a1a1a',
+            mapFilter: 'grayscale(1) sepia(0.3) contrast(1.05) brightness(0.95)', // Paper map style
+            mapOpacity: '0.15', // Subtle texture
+            mapBlend: 'multiply' // Blend into paper background
+        }
+    };
+
+    const colors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [replyText, setReplyText] = useState("");
@@ -124,13 +172,13 @@ const FungalMap: React.FC<FungalMapProps> = ({
         ctx.roundRect(rx, ry, w, h, radius);
         ctx.closePath();
 
-        ctx.fillStyle = 'rgba(10, 20, 30, 0.8)';
+        ctx.fillStyle = colors.bubbleFill;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.strokeStyle = colors.bubbleStroke;
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = colors.bubbleText;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(fc.text, x, y - h / 2 - 10);
@@ -203,9 +251,11 @@ const FungalMap: React.FC<FungalMapProps> = ({
                     const dist = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
                     if (dist < 200) {
-                        ctx.strokeStyle = `rgba(184, 242, 230, ${0.05 + (node.nourishment / 200)})`;
-                        ctx.lineWidth = 1 + (node.nourishment / 50);
-                        drawOrganicLine(ctx, x1, y1, x2, y2, time);
+                        if (dist < 200) {
+                            ctx.strokeStyle = `rgba(${colors.hyphaeBase}, ${0.05 + (node.nourishment / 200)})`;
+                            ctx.lineWidth = 1 + (node.nourishment / 50);
+                            drawOrganicLine(ctx, x1, y1, x2, y2, time);
+                        }
                     }
                 });
             });
@@ -219,7 +269,7 @@ const FungalMap: React.FC<FungalMapProps> = ({
                     const endX = (targetNode.x / 100) * canvas.width;
                     const endY = (targetNode.y / 100) * canvas.height;
 
-                    ctx.strokeStyle = 'rgba(235, 179, 66, 0.3)';
+                    ctx.strokeStyle = colors.userConn;
                     ctx.lineWidth = 1.5;
                     drawOrganicLine(ctx, startX, startY, endX, endY, time, 1, true);
                 }
@@ -233,7 +283,7 @@ const FungalMap: React.FC<FungalMapProps> = ({
                 const targetX = (pulse.targetX / 100) * canvas.width;
                 const targetY = (pulse.targetY / 100) * canvas.height;
 
-                ctx.strokeStyle = `rgba(235, 179, 66, ${1 - pulse.progress + 0.2})`;
+                ctx.strokeStyle = `rgba(${colors.pulseStroke}, ${1 - pulse.progress + 0.2})`;
                 ctx.lineWidth = 3;
                 drawOrganicLine(ctx, startX, startY, targetX, targetY, time, 2);
 
@@ -243,11 +293,11 @@ const FungalMap: React.FC<FungalMapProps> = ({
                 const currY = startY + dy * pulse.progress;
 
                 ctx.beginPath();
-                ctx.fillStyle = '#fff';
+                ctx.fillStyle = colors.pulseDot;
                 ctx.arc(currX, currY, 5, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.shadowBlur = 15;
-                ctx.shadowColor = '#ebcc42';
+                ctx.shadowColor = colors.pulseShadow;
                 ctx.stroke();
                 ctx.shadowBlur = 0;
             });
@@ -263,10 +313,10 @@ const FungalMap: React.FC<FungalMapProps> = ({
                 const baseSize = isUser ? 8 : node.size + (node.nourishment * 0.8);
 
                 let fillStyle = '';
-                if (isUser) fillStyle = 'rgba(210, 160, 44, 0.2)';
-                else if (isConnected) fillStyle = 'rgba(210, 160, 44, 0.1)';
-                else if (node.type === 'colony') fillStyle = 'rgba(172, 83, 57, 0.2)';
-                else fillStyle = 'rgba(77, 203, 168, 0.1)';
+                if (isUser) fillStyle = colors.userFill;
+                else if (isConnected) fillStyle = colors.userFill; // Use user fill for connected nodes too for clarity
+                else if (node.type === 'colony') fillStyle = colors.colonyFill;
+                else fillStyle = colors.sporeFill;
 
                 ctx.beginPath();
                 ctx.fillStyle = fillStyle;
@@ -274,9 +324,9 @@ const FungalMap: React.FC<FungalMapProps> = ({
                 ctx.fill();
 
                 let coreColor = '';
-                if (isUser) coreColor = '#d2a02c';
-                else if (node.type === 'colony') coreColor = '#ac5339';
-                else coreColor = '#4dcba8';
+                if (isUser) coreColor = colors.userCore;
+                else if (node.type === 'colony') coreColor = colors.colonyCore;
+                else coreColor = colors.sporeCore;
 
                 ctx.beginPath();
                 ctx.fillStyle = coreColor;
@@ -284,7 +334,7 @@ const FungalMap: React.FC<FungalMapProps> = ({
                 ctx.fill();
 
                 if (isUser) {
-                    ctx.fillStyle = '#d2a02c';
+                    ctx.fillStyle = colors.userCore;
                     ctx.font = '10px monospace';
                     ctx.fillText('YOU', x - 10, y + 20);
                 }
@@ -321,7 +371,7 @@ const FungalMap: React.FC<FungalMapProps> = ({
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [nodes, selectedNode, nourishPulses, userConnections, userLocation]);
+    }, [nodes, selectedNode, nourishPulses, userConnections, userLocation, colors]);
 
     const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!canvasRef.current) return;
@@ -395,12 +445,14 @@ const FungalMap: React.FC<FungalMapProps> = ({
 
                 {/* World Map with Glow Effect */}
                 <div
-                    className="absolute inset-0 opacity-40 mix-blend-screen"
+                    className="absolute inset-0 transition-all duration-700 ease-in-out"
                     style={{
+                        opacity: colors.mapOpacity,
+                        mixBlendMode: colors.mapBlend as any,
                         backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png)',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        filter: 'invert(1) grayscale(0.8) brightness(0.8) contrast(1.1)'
+                        filter: colors.mapFilter
                     }}
                 />
             </div>

@@ -5,6 +5,7 @@ import { LogIn, UserCircle, LogOut, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/contexts/authContext";
 import { useUserProgress } from "@/contexts/UserProgressContext";
 import AuthModal from "./AuthModal";
+import { ThemeSwitcher } from "../ui/ThemeSwitcher";
 
 
 const AuthSection = () => {
@@ -156,8 +157,8 @@ const Navigation = () => {
                     <Link
                       to={path}
                       className={`text-label transition-colors ${isLast
-                          ? "text-[hsl(var(--aurora-cyan))] font-bold"
-                          : "text-foreground hover:text-[hsl(var(--aurora-cyan))]"
+                        ? "text-[hsl(var(--aurora-cyan))] font-bold"
+                        : "text-foreground hover:text-[hsl(var(--aurora-cyan))]"
                         }`}
                     >
                       {label}
@@ -202,6 +203,7 @@ const Navigation = () => {
 
         {/* Auth Section */}
         <div className="flex items-center gap-3">
+          <ThemeSwitcher />
           <AuthSection />
         </div>
       </div>

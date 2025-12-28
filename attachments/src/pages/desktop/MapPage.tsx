@@ -197,7 +197,7 @@ const MapPage = () => {
             </div>
 
             {/* Current Region Dashboard */}
-            <div className="p-4 bg-card grid-line">
+            <div className="p-4 bg-white/5 grid-line">
               <h3 className="text-meta text-foreground/40 mb-4">Region Dashboard</h3>
 
               <div className="mb-4">
@@ -284,7 +284,7 @@ const MapPage = () => {
                         const targetRegion = mockRegions.find(r => r.name.includes(region.name));
                         if (targetRegion) handleRegionClick(targetRegion);
                       }}
-                      className="w-full p-3 bg-card hover:bg-card/70 grid-line flex items-center gap-3 transition-colors text-left"
+                      className="w-full p-3 bg-white/5 hover:bg-white/10 grid-line flex items-center gap-3 transition-colors text-left"
                     >
                       <span className="text-xl font-display text-foreground/30 w-8">
                         {String(region.rank).padStart(2, "0")}
@@ -314,7 +314,7 @@ const MapPage = () => {
                   {mockTopSpecies.map((species) => (
                     <div
                       key={species.rank}
-                      className="p-3 bg-card grid-line flex items-center gap-3"
+                      className="p-3 bg-white/5 grid-line flex items-center gap-3"
                     >
                       <span className="text-xl font-display italic text-foreground/30 w-8">
                         {String(species.rank).padStart(2, "0")}
@@ -354,7 +354,7 @@ const MapPage = () => {
                   <button
                     key={node.id}
                     onClick={() => setSelectedNode(node)}
-                    className="w-full p-3 bg-card hover:bg-card/70 grid-line flex items-center gap-3 transition-colors text-left"
+                    className="w-full p-3 bg-white/5 hover:bg-white/10 grid-line flex items-center gap-3 transition-colors text-left"
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${node.nourishment > 5 ? 'bg-[hsl(var(--aurora-magenta))]' : 'bg-[hsl(var(--aurora-cyan))]'}`} />
                     <div className="flex-1">
@@ -408,7 +408,7 @@ const LayerToggle = ({ label, sublabel, checked, onChange }: LayerToggleProps) =
   return (
     <button
       onClick={() => onChange(!checked)}
-      className="w-full p-3 bg-card hover:bg-card/70 grid-line flex items-center justify-between transition-colors text-left"
+      className="w-full p-3 bg-white/5 hover:bg-white/10 grid-line flex items-center justify-between transition-colors text-left"
     >
       <div>
         <span className="text-label text-foreground block">{label}</span>

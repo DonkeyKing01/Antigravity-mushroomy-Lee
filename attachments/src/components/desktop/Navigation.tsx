@@ -135,9 +135,9 @@ const Navigation = () => {
         {/* Breadcrumbs / Logo */}
         <div className="flex items-center gap-2 group">
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span className="text-label text-foreground/60">MYCO</span>
+            <span className="text-label text-foreground font-bold tracking-widest">MYCO</span>
             <span className="text-foreground/30">//</span>
-            <span className="text-label text-foreground">NEXUS</span>
+            <span className="text-label text-foreground font-bold tracking-widest">NEXUS</span>
           </Link>
 
           {location.pathname !== "/" && (
@@ -148,12 +148,17 @@ const Navigation = () => {
                 const item = navItems.find(n => n.path === path);
                 const label = item ? item.label : segment.toUpperCase();
 
+                const isLast = index === array.length - 1;
+
                 return (
                   <div key={path} className="flex items-center gap-2">
                     <span className="text-foreground/30">//</span>
                     <Link
                       to={path}
-                      className="text-label text-foreground hover:text-[hsl(var(--aurora-cyan))] transition-colors"
+                      className={`text-label transition-colors ${isLast
+                          ? "text-[hsl(var(--aurora-cyan))] font-bold"
+                          : "text-foreground hover:text-[hsl(var(--aurora-cyan))]"
+                        }`}
                     >
                       {label}
                     </Link>

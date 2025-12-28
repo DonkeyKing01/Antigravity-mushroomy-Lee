@@ -24,4 +24,27 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: '0.0.0.0', // 允许局域网访问
+    port: 5173,
+    proxy: {
+      // Proxy for Volcano Engine API to avoid CORS issues
+      '/api/volcano': {
+        target: 'https://ai-gateway.vei.volces.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/volcano/, ''),
+        secure: true,
+        // Ensure all headers are forwarded correctly
+        headers: {
+          'Host': 'ai-gateway.vei.volces.com',
+        },
+      },
+      // Proxy for upload API
+      '/api/upload': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        rewrite: (path) => path,
+      },
+    },
+  },
 });

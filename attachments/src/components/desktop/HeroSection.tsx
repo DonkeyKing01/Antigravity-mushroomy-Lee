@@ -1,8 +1,20 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Scan } from "lucide-react";
 import MyceliumScene from "./MyceliumScene";
+import ScanModal from "./ScanModal";
 
 const HeroSection = () => {
+  const [isScanModalOpen, setIsScanModalOpen] = useState(false);
+
+  const handleOpenScanModal = () => {
+    setIsScanModalOpen(true);
+  };
+
+  const handleCloseScanModal = () => {
+    setIsScanModalOpen(false);
+  };
+
   return (
     <section className="relative min-h-screen grid grid-cols-12">
       {/* WebGL Background - Full Screen */}
@@ -56,7 +68,10 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <button className="btn-pill inline-flex items-center gap-3 group">
+            <button 
+              className="btn-pill inline-flex items-center gap-3 group"
+              onClick={handleOpenScanModal}
+            >
               <Scan className="w-4 h-4 transition-transform group-hover:scale-110" />
               <span>SCAN SPECIES</span>
             </button>
@@ -140,6 +155,9 @@ const HeroSection = () => {
 
       {/* Bottom Grid Line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-[hsl(var(--structural-line))] animate-grid-h z-20" />
+
+      {/* Scan Modal */}
+      <ScanModal isOpen={isScanModalOpen} onClose={handleCloseScanModal} />
     </section>
   );
 };

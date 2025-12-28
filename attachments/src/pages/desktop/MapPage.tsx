@@ -323,7 +323,7 @@ const MapPage = () => {
                         <span className="text-label text-foreground block">
                           {species.name}
                         </span>
-                        <span className={`text-meta ${species.risk.includes("危险") || species.risk.includes("充分")
+                        <span className={`text-meta ${species.risk.includes("Cook Well")
                           ? "text-[hsl(var(--aurora-magenta))]"
                           : "text-foreground/40"
                           }`}>

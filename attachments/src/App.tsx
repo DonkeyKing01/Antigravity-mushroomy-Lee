@@ -14,6 +14,7 @@ import RecipeDetailPage from "@/pages/desktop/RecipeDetailPage";
 import NewsPage from "@/pages/desktop/NewsPage";
 import NewsDetailPage from "@/pages/desktop/NewsDetailPage";
 import ProfilePage from "@/pages/desktop/ProfilePage";
+import MobileUploadPage from "@/pages/MobileUploadPage";
 import { AuthProvider } from "@/contexts/authContext";
 import { UserProgressProvider } from "@/contexts/UserProgressContext";
 
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/news/:id" element={<NewsDetailPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/upload/:sessionId" element={<MobileUploadPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

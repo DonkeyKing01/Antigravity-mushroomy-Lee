@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/desktop/ProfilePage";
 import MobileUploadPage from "@/pages/MobileUploadPage";
 import { AuthProvider } from "@/contexts/authContext";
 import { UserProgressProvider } from "@/contexts/UserProgressContext";
+import OnboardingTour from "@/components/desktop/OnboardingTour";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
                 <Route path="/upload/:sessionId" element={<MobileUploadPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <OnboardingTour />
             </HashRouter>
           </UserProgressProvider>
         </AuthProvider>
